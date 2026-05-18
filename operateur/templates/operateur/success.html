@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Succès - DigiCIN</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-slate-50 flex items-center justify-center min-h-screen p-4">
+    <div class="max-w-md w-full bg-white p-10 rounded-3xl shadow-2xl border border-slate-100 text-center">
+        <div class="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+            </svg>
+        </div>
+        <h1 class="text-3xl font-extrabold text-slate-800 mb-4 tracking-tight">Soumission Réussie</h1>
+        <p class="text-slate-500 mb-8 leading-relaxed">Le dossier a été transmis avec succès au centre de contrôle. Un inspecteur procédera à sa vérification dans les plus brefs délais.</p>
+        
+        <div class="space-y-4">
+            <a href="." class="block w-full bg-slate-900 text-white font-bold px-8 py-4 rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 uppercase tracking-widest text-sm">
+                Saisir une nouvelle CIN
+            </a>
+            <a href="{% url 'controlleur:dashboard' %}" class="block w-full bg-white text-slate-600 font-bold px-8 py-4 rounded-2xl border border-slate-200 hover:bg-slate-50 transition-all uppercase tracking-widest text-xs">
+                Accéder au Dashboard
+            </a>
+        </div>
+    </div>
+</body>
+</html>

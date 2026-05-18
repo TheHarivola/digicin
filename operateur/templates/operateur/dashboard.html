@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Mes Dossiers - DigiCIN Opérateur{% endblock %}
+
+{% block content %}
+<div class="flex-1 p-8 max-w-[1400px] mx-auto w-full">
+    
+    <!-- En-tête Statistique -->
+    <div class="mb-12 flex flex-col md:flex-row justify-between items-end gap-6">
+        <div>
+            <h1 class="text-5xl font-[900] text-marian-blue tracking-tighter mb-4">Mes Saisies</h1>
+            <p class="text-slate-500 font-medium max-w-xl leading-relaxed italic">Consultez l'historique de vos transmissions et gérez les éventuelles demandes de correction émanant du centre de contrôle.</p>
+        </div>
+        <div class="flex gap-4">
+            <div class="bg-white border border-slate-100 p-6 rounded-[2rem] shadow-xl shadow-slate-200/50 flex flex-col items-center min-w-[140px]">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 italic">Total Dossiers</span>
+                <span class="text-3xl font-black text-slate-900 leading-none">{{ cins.count }}</span>
+            </div>
+            <a href="{% url 'operateur:nouveau' %}" class="bg-marian-blue text-white btn-premium px-12 group">
+                <svg class="w-5 h-5 mr-3 group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                Nouveau Dossier
+            </a>
+        </div>
+    </div>
+
+    <!-- Filtres & Liste -->
+    <div class="bg-white border border-slate-100 rounded-[2.5rem] shadow-2xl shadow-slate-200/50 overflow-hidden">
+        <div class="p-8 border-b border-slate-50 flex items-center justify-between bg-slate-50/30">
+            <h2 class="text-xs font-black text-slate-900 uppercase tracking-[0.2em] italic">File de traitement numérique</h2>
+            <div class="flex gap-2">
+                <span class="px-3 py-1 bg-white border border-slate-100 rounded-lg text-[9px] font-bold text-slate-400 uppercase italic">Tri : Priorité Correction</span>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-50 bg-slate-50/10">
+                        <th class="p-8 italic">Référence CIN</th>
+                        <th class="p-8 italic">Identité Civile</th>
+                        <th class="p-8 italic text-center">État du Dossier</th>
+                        <th class="p-8 text-right italic">Action Système</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 italic">
+                    {% for cin in cins %}
+                    <tr class="hover:bg-slate-50/50 transition-all duration-300 group {% if cin.statut == 'A_MODIFIER' %}bg-red-50/20{% endif %}">
+                        <td class="p-8">
+                            <span class="font-mono font-black text-slate-900 tracking-tighter text-lg leading-none">{{ cin.numero_cin }}</span>
+                            <p class="text-[9px] text-slate-400 font-bold uppercase mt-2">Dossier ID: #{{ cin.pk }}</p>
+                        </td>
+                        <td class="p-8">
+                            <p class="text-base font-extrabold text-slate-800 leading-none mb-1">{{ cin.nom }} {{ cin.prenom }}</p>
+                            <p class="text-[10px] text-slate-400 font-medium">Soumis le {{ cin.created_at|date:"d/m/Y à H:i" }}</p>
+                        </td>
+                        <td class="p-8">
+                            <div class="flex justify-center">
+                                {% if cin.statut == 'EN_ATTENTE' %}
+                                <div class="flex items-center gap-3 px-4 py-2 bg-amber-50 text-amber-600 rounded-2xl border border-amber-100 shadow-sm shadow-amber-900/5">
+                                    <span class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+                                    <span class="text-[10px] font-black uppercase tracking-widest">En Contrôle</span>
+                                </div>
+                                {% elif cin.statut == 'VALIDE' %}
+                                <div class="flex items-center gap-3 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-2xl border border-emerald-100 shadow-sm shadow-emerald-900/5">
+                                    <span class="w-2 h-2 bg-emerald-500 rounded-full"></span>
+                                    <span class="text-[10px] font-black uppercase tracking-widest">Approuvé</span>
+                                </div>
+                                {% else %}
+                                <div class="flex flex-col items-center gap-2">
+                                    <div class="flex items-center gap-3 px-4 py-2 bg-red-600 text-white rounded-2xl border border-red-700 shadow-lg shadow-red-900/5 scale-105">
+                                        <span class="w-2 h-2 bg-white rounded-full animate-ping"></span>
+                                        <span class="text-[10px] font-black uppercase tracking-widest">À Corriger</span>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="p-8 text-right underline decoration-2 decoration-transparent group-hover:decoration-marian-blue underline-offset-8 transition-all">
+                            {% if cin.statut == 'A_MODIFIER' %}
+                            <a href="{% url 'operateur:modifier' cin.pk %}" class="inline-flex items-center gap-3 bg-slate-900 text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.15em] hover:bg-marian-blue transition-all active:scale-95 shadow-xl shadow-slate-900/10">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                Rectifier
+                            </a>
+                            {% else %}
+                            <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest italic group-hover:text-slate-400 transition-colors">Lecture Seule</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="p-32 text-center">
+                            <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
+                                <svg class="w-10 h-10 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+                            </div>
+                            <p class="text-slate-400 font-bold uppercase tracking-widest text-[10px]">Aucun dossier enregistré</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

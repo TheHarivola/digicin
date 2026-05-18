@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - DigiCIN{% endblock %}
+
+{% block content %}
+<div class="flex-1 bg-slate-50">
+    <!-- Fil d'Ariane -->
+    <div class="max-w-[1400px] mx-auto px-6 py-4 flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-slate-400">
+        <a href="{% url 'operateur:dashboard' %}" class="hover:text-marian-blue">Tableau de Bord</a>
+        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        <span class="text-slate-900">{{ title }}</span>
+    </div>
+
+    <div class="max-w-[1400px] mx-auto px-6 pb-20">
+        <form method="post" enctype="multipart/form-data" id="cinForm" class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            {% csrf_token %}
+            
+            <!-- Colonne de gauche : Formulaire -->
+            <div class="lg:col-span-8 space-y-8">
+                
+                {% if cin and cin.motif_modification %}
+                <div class="p-6 bg-red-600 rounded-premium text-white flex items-start gap-6 shadow-xl shadow-red-900/20 animate-pulse">
+                    <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center backdrop-blur-md">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-black uppercase tracking-widest mb-1 italic">Instructions du Contrôle</h4>
+                        <p class="text-lg font-bold">"{{ cin.motif_modification }}"</p>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Section I : Identité Officielle -->
+                <section class="bg-white rounded-premium shadow-2xl shadow-slate-200 border border-slate-100 overflow-hidden">
+                    <div class="p-6 bg-marian-blue flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
+                            </div>
+                            <h3 class="text-white font-black uppercase tracking-widest text-xs">Identité Civile</h3>
+                        </div>
+                        <span class="px-3 py-1 bg-white/10 text-white rounded-lg text-[9px] font-black uppercase tracking-widest">Section 01</span>
+                    </div>
+
+                    <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="md:col-span-2 bg-slate-900 rounded-2xl p-8 relative overflow-hidden group">
+                            <div class="absolute -right-4 -bottom-4 opacity-[0.05] group-hover:scale-110 transition-transform">
+                                <svg class="w-40 h-40 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </div>
+                            <label class="block text-[11px] uppercase font-black text-blue-400 mb-3 tracking-[0.2em]">Numéro National d'Identification (12 chiffres)</label>
+                            {{ form.numero_cin }}
+                            {% if form.numero_cin.errors %}
+                                <p class="text-red-400 text-xs mt-2 font-bold italic">{{ form.numero_cin.errors.0 }}</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Nom de Famille</label>
+                            {{ form.nom }}
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Prénoms</label>
+                            {{ form.prenom }}
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Date de Naissance</label>
+                            {{ form.date_naissance }}
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Lieu de Naissance</label>
+                            {{ form.lieu_naissance }}
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section II : Social & Filiation -->
+                <section class="bg-white rounded-premium shadow-2xl shadow-slate-200 border border-slate-100 overflow-hidden">
+                    <div class="p-6 bg-slate-900 flex items-center justify-between">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                            </div>
+                            <h3 class="text-white font-black uppercase tracking-widest text-xs">Situation & Filiation</h3>
+                        </div>
+                        <span class="px-3 py-1 bg-white/10 text-white rounded-lg text-[9px] font-black uppercase tracking-widest">Section 02</span>
+                    </div>
+
+                    <div class="p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="md:col-span-2">
+                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Adresse Résidentielle</label>
+                            {{ form.domicile }}
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Arrondissement</label>
+                            {{ form.arrondissement }}
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Profession</label>
+                            {{ form.profession }}
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Identité du Père</label>
+                            {{ form.nom_pere }}
+                        </div>
+                        <div class="flex flex-col">
+                            <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Identité de la Mère</label>
+                            {{ form.nom_mere }}
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Section III : Historique de Délivrance -->
+                <section class="bg-white rounded-premium shadow-2xl shadow-slate-200 border border-slate-100 overflow-hidden">
+                    <div class="p-8">
+                        <div class="flex items-center gap-6 mb-8 pb-8 border-b border-slate-50">
+                            <div class="flex items-center gap-3">
+                                {{ form.is_duplicata }}
+                                <label class="text-sm font-black text-slate-900 uppercase tracking-widest cursor-pointer">Cocher s'il s'agit d'un Duplicata</label>
+                            </div>
+                        </div>
+
+                        <div id="duplicata_fields" class="grid grid-cols-1 md:grid-cols-2 gap-8 transition-all duration-500 opacity-30 pointer-events-none grayscale">
+                            <div class="flex flex-col">
+                                <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Date du Remplacement</label>
+                                {{ form.date_remplacement }}
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Lieu du Remplacement</label>
+                                {{ form.lieu_remplacement }}
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12 pt-12 border-t border-slate-50">
+                            <div class="flex flex-col">
+                                <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Délivrée le (Original)</label>
+                                {{ form.date_creation }}
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="text-[10px] font-black uppercase text-slate-400 tracking-widest mb-2 px-1 italic">Lieu de Délivrance</label>
+                                {{ form.lieu_creation }}
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Colonne de droite : Médias & Actions -->
+            <div class="lg:col-span-4 space-y-8">
+                <!-- Pièces Jointes -->
+                <aside class="bg-marian-blue rounded-premium p-8 text-white shadow-2xl shadow-blue-900/10">
+                    <h3 class="text-xs font-black uppercase tracking-widest mb-8 flex items-center gap-3">
+                        <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        Documents Source
+                    </h3>
+
+                    <div class="space-y-8">
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black text-blue-300 uppercase tracking-widest italic">Portrait d'identité</label>
+                            <div class="p-4 bg-white/5 rounded-2xl border-2 border-dashed border-white/20 hover:border-white/40 transition-all">
+                                {{ form.photo_identite }}
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black text-blue-300 uppercase tracking-widest italic">Scan Recto (CIN Originale)</label>
+                            <div class="p-4 bg-white/5 rounded-2xl border-2 border-dashed border-white/20 hover:border-white/40 transition-all">
+                                {{ form.scan_recto }}
+                            </div>
+                        </div>
+                        <div class="space-y-3">
+                            <label class="text-[10px] font-black text-blue-300 uppercase tracking-widest italic">Scan Verso (CIN Originale)</label>
+                            <div class="p-4 bg-white/5 rounded-2xl border-2 border-dashed border-white/20 hover:border-white/40 transition-all">
+                                {{ form.scan_verso }}
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Zone de Soumission -->
+                <div class="p-8 bg-white rounded-premium border border-slate-100 shadow-xl">
+                    <p class="text-xs font-bold text-slate-500 mb-6 leading-relaxed bg-slate-50 p-4 rounded-xl border-l-4 border-blue-500 italic">
+                        "En soumettant ce dossier, vous certifiez que les données saisies sont conformes aux documents originaux fournis."
+                    </p>
+                    <button type="submit" class="w-full h-16 bg-marian-blue text-white rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl shadow-blue-900/10 active:scale-95 flex items-center justify-center gap-3" id="submitBtn">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg>
+                        {% if cin %}Enregistrer la Correction{% else %}Initier le Dossier{% endif %}
+                    </button>
+                    <a href="{% url 'operateur:dashboard' %}" class="block text-center mt-6 text-[10px] font-black text-slate-400 uppercase tracking-widest hover:text-red-500 transition-colors italic">
+                        Annuler et retourner
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cinInput = document.getElementById('id_numero_cin');
+        const isDuplicataCheckbox = document.querySelector('input[name="is_duplicata"]');
+        const duplicataFieldsContainer = document.getElementById('duplicata_fields');
+        const form = document.getElementById('cinForm');
+
+        // 1. Masque interactif Numero CIN
+        cinInput.addEventListener('input', (e) => {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 12) value = value.slice(0, 12);
+            let formattedValue = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 3 === 0) formattedValue += ' ';
+                formattedValue += value[i];
+            }
+            e.target.value = formattedValue;
+        });
+
+        // 2. Logique Duplicata
+        const toggleDuplicata = () => {
+            if (isDuplicataCheckbox.checked) {
+                duplicataFieldsContainer.classList.remove('opacity-30', 'pointer-events-none', 'grayscale');
+            } else {
+                duplicataFieldsContainer.classList.add('opacity-30', 'pointer-events-none', 'grayscale');
+            }
+        };
+
+        isDuplicataCheckbox.addEventListener('change', toggleDuplicata);
+        toggleDuplicata(); // Init
+
+        // 3. Clean spaces before submit
+        form.addEventListener('submit', () => {
+            cinInput.value = cinInput.value.replace(/\s/g, '');
+        });
+    });
+</script>
+{% endblock %}
