@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+
+{% block title %}Suivi de Dossier - Ministère de l'Intérieur{% endblock %}
+
+{% block content %}
+<div class="flex-1 flex flex-col items-center justify-center p-6 bg-gradient-to-b from-blue-50 to-white">
+    
+    <div class="w-full max-w-2xl">
+        <!-- Badge institutionnel -->
+        <div class="flex flex-col items-center mb-12 animate-fade-in-down">
+            <div class="w-20 h-20 bg-white rounded-[2.5rem] shadow-2xl flex items-center justify-center mb-6 border border-blue-50">
+                <svg class="w-10 h-10 text-marian-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+            <h2 class="text-3xl font-[900] text-marian-blue tracking-tight mb-2 text-center">Service National d'Identification</h2>
+            <p class="text-slate-500 font-medium text-center">Consultez l'état d'avancement de votre Carte Nationale d'Identité</p>
+        </div>
+
+        <!-- Formulaire de Recherche SaaS -->
+        <form method="GET" class="relative group mb-12">
+            <div class="absolute inset-y-0 left-6 flex items-center pointer-events-none transition-transform group-focus-within:scale-110">
+                <svg class="w-6 h-6 text-slate-400 group-focus-within:text-blue-600 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            </div>
+            <input type="text" name="q" value="{{ query }}" 
+                   placeholder="Saisissez votre numéro de CIN (12 chiffres)" 
+                   class="w-full bg-white border-2 border-slate-100 h-20 pl-16 pr-32 rounded-premium text-xl font-bold text-slate-900 focus:outline-none focus:border-blue-500 focus:ring-8 focus:ring-blue-500/10 placeholder-slate-300 transition-all shadow-xl shadow-blue-900/5 group-hover:border-slate-200"
+                   maxlength="15" id="cin_search_input">
+            <div class="absolute inset-y-2 right-2">
+                <button type="submit" class="h-full px-8 bg-marian-blue text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-black transition-all active:scale-95 shadow-lg shadow-blue-900/20">
+                    Vérifier
+                </button>
+            </div>
+        </form>
+
+        <!-- Résultats -->
+        {% if error %}
+        <div class="bg-red-50 border-2 border-red-100 p-8 rounded-premium flex items-start gap-6 animate-shake">
+            <div class="w-12 h-12 bg-red-600 rounded-2xl flex items-center justify-center text-white shadow-lg shrink-0">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <div>
+                <h3 class="text-red-700 font-extrabold uppercase tracking-widest text-[10px] mb-2">Erreur système</h3>
+                <p class="text-red-900 font-bold leading-relaxed">{{ error }}</p>
+                <p class="text-red-700/60 text-xs mt-2 italic font-medium">Assurez-vous d'avoir saisi les 12 chiffres correctement.</p>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if cin %}
+        <div class="bg-white border border-slate-100 p-8 rounded-[2.5rem] shadow-2xl animate-fade-in shadow-blue-900/5 overflow-hidden relative">
+            <!-- Filigrane institutionnel -->
+            <div class="absolute -right-20 -bottom-20 opacity-[0.03] rotate-12 scale-150 pointer-events-none">
+                <svg class="w-80 h-80" fill="currentColor" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-10 pb-10 border-b border-slate-50">
+                <div class="flex items-center gap-6">
+                    <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center">
+                        <svg class="w-8 h-8 text-slate-400 font-mono" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-black text-slate-900 tracking-tight mb-2">{{ cin.nom }} {{ cin.prenom }}</h3>
+                        <p class="font-mono text-slate-400 font-bold tracking-widest">{{ cin.numero_cin }}</p>
+                    </div>
+                </div>
+
+                {% if cin.statut == 'VALIDE' %}
+                <div class="flex items-center gap-3 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-xl border border-emerald-100">
+                    <span class="w-2 h-2 bg-emerald-500 rounded-full animate-ping"></span>
+                    <span class="text-xs font-black uppercase tracking-widest italic">Document Prêt</span>
+                </div>
+                {% elif cin.statut == 'EN_ATTENTE' %}
+                <div class="flex items-center gap-3 px-4 py-2 bg-amber-50 text-amber-600 rounded-xl border border-amber-100">
+                    <span class="w-2 h-2 bg-amber-400 rounded-full animate-pulse"></span>
+                    <span class="text-xs font-black uppercase tracking-widest">En cours de traitement</span>
+                </div>
+                {% else %}
+                <div class="flex items-center gap-3 px-4 py-2 bg-red-50 text-red-600 rounded-xl border border-red-100">
+                    <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                    <span class="text-xs font-black uppercase tracking-widest">Correction nécessaire</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
+                <div class="space-y-4">
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Date de Soumission</span>
+                        <p class="font-bold text-slate-800 tracking-tight italic">{{ cin.created_at|date:"d F Y" }}</p>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Dernière Mise à Jour</span>
+                        <p class="font-bold text-slate-800 tracking-tight italic">{{ cin.updated_at|date:"H:i, d/m/Y" }}</p>
+                    </div>
+                </div>
+                <div class="p-6 bg-slate-50/50 rounded-2xl border border-slate-100">
+                    <h4 class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">Message du Centre de Contrôle</h4>
+                    {% if cin.statut == 'VALIDE' %}
+                    <p class="text-sm font-medium text-slate-600 leading-relaxed italic">"Votre Carte d'Identité Nationale a été approuvée par les services compétents. Vous pouvez désormais télécharger la version numérique sécurisée."</p>
+                    {% elif cin.statut == 'EN_ATTENTE' %}
+                    <p class="text-sm font-medium text-slate-600 leading-relaxed italic">"Votre dossier est actuellement sous examen par un contrôleur d'État. Ce processus prend généralement 48 à 72 heures."</p>
+                    {% else %}
+                    <p class="text-sm font-medium text-red-700 leading-relaxed italic font-bold">"Votre dossier nécessite une correction de la part de l'agent de saisie. Motif : {{ cin.motif_modification }}"</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if cin.statut == 'VALIDE' %}
+            <a href="#" class="w-full h-16 bg-marian-blue text-white flex items-center justify-center gap-4 rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl shadow-blue-900/20 active:scale-95 group">
+                <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Télécharger mon Document Officiel
+            </a>
+            {% else %}
+            <button disabled class="w-full h-16 bg-slate-100 text-slate-400 flex items-center justify-center gap-4 rounded-2xl font-black text-sm uppercase tracking-[0.2em] cursor-not-allowed">
+                Document indisponible au téléchargement
+            </button>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+</div>
+
+<script>
+    // Masque interactif pour le champ de recherche
+    const searchInput = document.getElementById('cin_search_input');
+    searchInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length > 12) value = value.slice(0, 12);
+        
+        // On affiche les espaces pour une meilleure lisibilité
+        let formattedValue = '';
+        for (let i = 0; i < value.length; i++) {
+            if (i > 0 && i % 3 === 0) formattedValue += ' ';
+            formattedValue += value[i];
+        }
+        e.target.value = formattedValue;
+    });
+</script>
+
+<style>
+    @keyframes fade-in-down {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fade-in {
+        0% { opacity: 0; transform: scale(0.95); }
+        100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+    .animate-fade-in-down { animation: fade-in-down 0.8s ease-out; }
+    .animate-fade-in { animation: fade-in 0.6s ease-out; }
+    .animate-shake { animation: shake 0.4s ease-in-out infinite; animation-iteration-count: 2; }
+</style>
+{% endblock %}
