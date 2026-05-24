@@ -104,8 +104,140 @@
                 </div>
             </div>
 
+            <!-- APERÇU DIGITAL DES CARTES -->
+            <div class="mb-10 space-y-6">
+                <h4 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-4 text-center italic">Aperçu Virtuel de la Carte d'Identité Nationale</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    
+                    <!-- RECTO -->
+                    <div class="bg-white/40 p-2.5 rounded-[1.8rem] shadow-xl border border-slate-200/50 relative overflow-hidden group">
+                        <div class="absolute inset-x-0 top-0 h-[100%] bg-gradient-to-tr from-white/0 via-white/5 to-white/15 pointer-events-none z-10 transition-all"></div>
+                        <div class="rounded-[1.2rem] bg-[#f8f4e9] p-5 relative overflow-hidden border border-amber-900/10 shadow-inner flex flex-col justify-between min-h-[330px]" style="background-image: radial-gradient(circle at 80% 20%, rgba(197, 160, 89, 0.05) 0%, transparent 80%);">
+                            <div class="absolute top-[48%] left-[62%] -translate-x-1/2 -translate-y-1/2 w-40 h-40 rounded-full border border-dashed border-red-600/[0.08] flex items-center justify-center pointer-events-none select-none">
+                                <div class="w-[88%] h-[88%] rounded-full border border-dashed border-red-600/[0.06] flex flex-col items-center justify-center p-1 text-center text-red-600/[0.08] text-[6px] font-black uppercase tracking-wider leading-none">
+                                    <span>MINISTÈRE DES CIN</span>
+                                </div>
+                            </div>
+                            <!-- Header -->
+                            <div class="text-center mb-3">
+                                <h5 class="text-[7.5px] font-black text-[#5a4e3a] uppercase tracking-wider leading-none mb-1">REPOBLIKAN' I MADAGASIKARA</h5>
+                                <h2 class="text-[10px] font-[900] text-slate-900 tracking-wider uppercase leading-none mb-0.5">KARA-PANONDROM-PIRENENA</h2>
+                                <p class="text-[6.5px] font-semibold text-slate-500 italic leading-none">(Carte Nationale d'Identité)</p>
+                            </div>
+                            <!-- Grid -->
+                            <div class="grid grid-cols-12 gap-3 items-start relative z-10">
+                                <div class="col-span-4">
+                                    <div class="aspect-[4/5] bg-white border border-slate-350 p-1 rounded-lg">
+                                        <div class="w-full h-full bg-slate-100 rounded overflow-hidden">
+                                            <img src="{{ cin.photo_identite.url }}" class="w-full h-full object-cover grayscale brightness-110 contrast-125 focus:scale-105 transition-all">
+                                        </div>
+                                    </div>
+                                    <div class="text-center mt-1">
+                                        <span class="font-serif text-[10px] text-blue-800/50 italic">{{ cin.prenom|slice:":1" }}{{ cin.nom }}</span>
+                                    </div>
+                                </div>
+                                <div class="col-span-8 space-y-1.5 text-[10px] text-left">
+                                    <div class="border-b border-dashed border-slate-300 pb-0.5">
+                                        <span class="text-[7.5px] font-semibold text-slate-400 uppercase">Nom :</span>
+                                        <p class="font-bold text-slate-900 font-mono uppercase">{{ cin.nom }}</p>
+                                    </div>
+                                    <div class="border-b border-dashed border-slate-300 pb-0.5">
+                                        <span class="text-[7.5px] font-semibold text-slate-400 uppercase">Prénoms :</span>
+                                        <p class="font-bold text-slate-900 font-mono truncate">{{ cin.prenom }}</p>
+                                    </div>
+                                    <div class="border-b border-dashed border-slate-300 pb-0.5">
+                                        <span class="text-[7.5px] font-semibold text-slate-400 uppercase">Né(e) le :</span>
+                                        <p class="font-bold text-slate-900 font-mono">{{ cin.date_naissance_fr }}</p>
+                                    </div>
+                                    <div class="border-b border-dashed border-slate-300 pb-0.5">
+                                        <span class="text-[7.5px] font-semibold text-slate-400 uppercase">À :</span>
+                                        <p class="font-bold text-slate-900 font-mono uppercase truncate leading-tight">{{ cin.lieu_naissance }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bottom Box Number -->
+                            <div class="mt-4 pt-2 border-t border-slate-200 flex items-center justify-between">
+                                <div class="flex flex-col">
+                                    <span class="text-[7px] font-black text-slate-500 uppercase">LAHARANA / N°</span>
+                                    <div class="flex gap-0.5 mt-0.5">
+                                        {% for part in cin.numero_cin_parts %}
+                                        <div class="px-1.5 py-0.5 bg-white border border-slate-350 rounded text-[9px] font-bold text-slate-800 font-mono">{{ part }}</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <span class="text-[7px] font-black text-emerald-600 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded">AUTHENTIQUE</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- VERSO -->
+                    <div class="bg-white/40 p-2.5 rounded-[1.8rem] shadow-xl border border-slate-200/50 relative overflow-hidden group">
+                        <div class="absolute inset-x-0 top-0 h-[100%] bg-gradient-to-tr from-white/0 via-white/5 to-white/15 pointer-events-none z-10 transition-all"></div>
+                        <div class="rounded-[1.2rem] bg-[#f8f4e9] p-5 relative overflow-hidden border border-amber-900/10 shadow-inner flex flex-col justify-between min-h-[330px]" style="background-image: radial-gradient(circle at 10% 20%, rgba(197, 160, 89, 0.04) 0%, transparent 80%);">
+                            <div class="space-y-1.5 text-[10px] text-left">
+                                <div class="flex justify-between items-center text-[7.5px] text-slate-400 border-b border-dashed border-slate-200 pb-1 mb-1">
+                                    <span>COMMUNE D'ENREGISTREMENT</span>
+                                    <span class="font-mono">N° 890{{ cin.id }}163 /B</span>
+                                </div>
+                                <div class="border-b border-dashed border-slate-300 pb-0.5">
+                                    <span class="text-[7.5px] font-semibold text-slate-400 uppercase">FONENANA / Domicile :</span>
+                                    <p class="font-bold text-slate-900 font-mono uppercase truncate">{{ cin.domicile }}</p>
+                                </div>
+                                <div class="border-b border-dashed border-slate-300 pb-0.5">
+                                    <span class="text-[7.5px] font-semibold text-slate-400 uppercase">BORIBORITANY / Arrondissement :</span>
+                                    <p class="font-bold text-slate-900 font-mono uppercase">{{ cin.arrondissement }}</p>
+                                </div>
+                                <div class="border-b border-dashed border-slate-300 pb-0.5">
+                                    <span class="text-[7.5px] font-semibold text-slate-400 uppercase">ASA ATAO / Profession :</span>
+                                    <p class="font-bold text-slate-900 font-mono">{{ cin.profession }}</p>
+                                </div>
+                                <div class="border-b border-dashed border-slate-300 pb-0.5">
+                                    <span class="text-[7.5px] font-semibold text-slate-400 uppercase">RAY NITERAKA / Père :</span>
+                                    <p class="font-bold text-slate-900 font-mono uppercase truncate">{{ cin.nom_pere }}</p>
+                                </div>
+                                <div class="border-b border-dashed border-slate-300 pb-0.5">
+                                    <span class="text-[7.5px] font-semibold text-slate-400 uppercase">RENY NITERAKA / Mère :</span>
+                                    <p class="font-bold text-slate-900 font-mono uppercase truncate">{{ cin.nom_mere }}</p>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <div class="border-b border-dashed border-slate-300 pb-0.5">
+                                        <span class="text-[7.5px] font-semibold text-slate-400 uppercase">Fait à :</span>
+                                        <p class="font-bold text-slate-900 font-mono uppercase truncate">{{ cin.lieu_creation }}</p>
+                                    </div>
+                                    <div class="border-b border-dashed border-slate-300 pb-0.5">
+                                        <span class="text-[7.5px] font-semibold text-slate-400 uppercase">Le :</span>
+                                        <p class="font-bold text-slate-900 font-mono">{{ cin.date_creation_fr }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bottom Seals and Timbres -->
+                            <div class="grid grid-cols-3 gap-2 items-end mt-4 pt-2 border-t border-slate-200">
+                                <div class="text-left leading-none">
+                                    <span class="text-[6.5px] font-bold text-slate-500 block">Signature Autorité</span>
+                                    <span class="font-serif text-[10px] text-blue-900/60 inline-block mt-1 italic select-none">P. l'Adjoint</span>
+                                </div>
+                                <div class="flex flex-col items-center justify-center">
+                                    <div class="w-9 h-11 bg-[#b57a55]/20 border border-dashed border-[#b57a55]/50 rounded flex flex-col justify-between items-center p-0.5">
+                                        <span class="text-[5px] text-[#582e17] font-black">Ar 200</span>
+                                        <span class="text-[4px] text-[#7c4423]/70 font-[800]">FISCAL</span>
+                                    </div>
+                                </div>
+                                <div class="text-center relative">
+                                    <span class="text-[6.5px] font-bold text-slate-500 block">Sonia sy Lavotondro</span>
+                                    <div class="flex justify-center gap-0.5 mt-1">
+                                        <span class="w-4 h-5 rounded-full bg-slate-800/[0.12] inline-block"></span>
+                                        <span class="w-4 h-5 rounded-full bg-slate-800/[0.12] inline-block"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
             {% if cin.statut == 'VALIDE' %}
-            <a href="#" class="w-full h-16 bg-marian-blue text-white flex items-center justify-center gap-4 rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl shadow-blue-900/20 active:scale-95 group">
+            <a href="{% url 'citoyen:download_pdf' cin.pk %}" class="w-full h-16 bg-marian-blue text-white flex items-center justify-center gap-4 rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl shadow-blue-900/20 active:scale-95 group">
                 <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
                 Télécharger mon Document Officiel
             </a>
@@ -116,7 +248,25 @@
             {% endif %}
         </div>
         {% endif %}
+
+        <!-- Encart Professionnel des Termes de Référence (TDR) -->
+        <div class="mt-12 p-6 bg-white border border-slate-150 rounded-[1.8rem] shadow-xl shadow-blue-950/5 flex flex-col sm:flex-row items-center justify-between gap-6">
+            <div class="flex items-center gap-5">
+                <div class="w-12 h-12 bg-blue-50 text-marian-blue rounded-2xl flex items-center justify-center shrink-0 shadow-inner">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                </div>
+                <div class="text-center sm:text-left">
+                    <h4 class="text-xs font-black text-marian-blue uppercase tracking-widest mb-1">Termes de Référence (TDR)</h4>
+                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Cadrage Stratégique &amp; Spécifications de l'Infrastructure</p>
+                </div>
+            </div>
+            <a href="{% url 'citoyen:tdr_pdf' %}" class="w-full sm:w-auto px-6 h-12 bg-gradient-to-r from-marian-blue to-blue-900 text-white rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-black transition-all active:scale-95 shadow-lg shadow-blue-900/15">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                Télécharger TDR (PDF)
+            </a>
+        </div>
     </div>
+
 
 </div>
 
