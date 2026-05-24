@@ -96,6 +96,30 @@ class CIN(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Date de soumission"))
     updated_at = models.DateTimeField(auto_now=True, verbose_name=_("Dernière mise à jour"))
 
+    @property
+    def numero_cin_parts(self):
+        """Retourne le numéro CIN sous forme de 4 blocs de 3 chiffres"""
+        val = str(self.numero_cin)
+        if len(val) == 12:
+            return [val[0:3], val[3:6], val[6:9], val[9:12]]
+        return [val, "", "", ""]
+
+    @property
+    def date_naissance_fr(self):
+        if not self.date_naissance:
+            return ""
+        months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+        d = self.date_naissance
+        return f"{d.day:02d} {months[d.month - 1]} {d.year}"
+
+    @property
+    def date_creation_fr(self):
+        if not self.date_creation:
+            return ""
+        months = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+        d = self.date_creation
+        return f"{d.day:02d} {months[d.month - 1]} {d.year}"
+
     class Meta:
         verbose_name = _("CIN")
         verbose_name_plural = _("CINs")

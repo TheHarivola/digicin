@@ -1,0 +1,152 @@
+{% load static auth_extras %}
+<!DOCTYPE html>
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}DigiCIN - Système National d'Identification{% endblock %}</title>
+    <!-- Tailwind CSS via Play CDN (Recommandé pour cet environnement) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'marian-blue': '#003366',
+                        'royal-gold': '#C5A059',
+                        'slate-surface': '#F8FAFC',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    borderRadius: {
+                        'premium': '1.5rem',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        @layer base {
+            body { @apply bg-slate-surface text-slate-900 antialiased; }
+        }
+
+        @layer components {
+            .nav-link { @apply flex items-center px-4 py-2 text-sm font-semibold rounded-xl transition-all duration-300; }
+            .nav-link-active { @apply bg-blue-50 text-blue-700 shadow-sm shadow-blue-100; }
+            .nav-link-inactive { @apply text-slate-500 hover:text-slate-900 hover:bg-slate-100; }
+            .btn-premium { @apply inline-flex items-center justify-center px-6 py-3 rounded-xl font-black text-xs uppercase tracking-widest transition-all duration-300 active:scale-95 shadow-lg; }
+        }
+
+        /* Masquage de la scrollbar pour une UI épurée mais scrollable */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="h-full flex flex-col no-scrollbar">
+
+    <!-- Header Premium -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-[1400px] mx-auto h-20 px-6 flex items-center justify-between">
+            
+            <!-- Logo & Title -->
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-marian-blue rounded-2xl flex items-center justify-center shadow-xl shadow-blue-900/20">
+                    <span class="text-white font-black text-xl italic leading-none">C</span>
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-tight text-marian-blue leading-none mb-1">DIGICIN</h1>
+                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] leading-none">Registre d'État Civil</p>
+                </div>
+            </div>
+
+            <!-- Navigation Contextuelle (Isolée par Rôle) -->
+            <nav class="hidden md:flex items-center gap-2">
+                {% if user.is_authenticated %}
+                    {% if user|has_group:"Opérateurs" %}
+                        <a href="{% url 'operateur:dashboard' %}" class="nav-link {% if request.resolver_match.app_name == 'operateur' %}nav-link-active{% else %}nav-link-inactive{% endif %}">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                            Espace Saisie
+                        </a>
+                    {% elif user|has_group:"Contrôleurs" %}
+                        <a href="{% url 'controlleur:dashboard' %}" class="nav-link {% if request.resolver_match.app_name == 'controlleur' %}nav-link-active{% else %}nav-link-inactive{% endif %}">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                            Centre de Contrôle
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <a href="{% url 'citoyen:search' %}" class="nav-link {% if request.resolver_match.app_name == 'citoyen' %}nav-link-active{% else %}nav-link-inactive{% endif %}">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        Portail Citoyen
+                    </a>
+                {% endif %}
+            </nav>
+
+            <!-- Actions Utilisateur Sécurisées -->
+            <div class="flex items-center gap-4">
+                {% if user.is_authenticated %}
+                    <div class="flex flex-col items-end mr-2">
+                        <span class="text-xs font-black text-slate-900 leading-none">{{ user.username }}</span>
+                        <span class="text-[9px] font-bold text-blue-500 uppercase tracking-widest mt-1">
+                            {% if user|has_group:"Contrôleurs" %}Agent de Contrôle{% elif user|has_group:"Opérateurs" %}Agent de Saisie{% else %}Super-Administrateur{% endif %}
+                        </span>
+                    </div>
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-900 text-white hover:bg-red-600 transition-all shadow-lg shadow-slate-900/10" title="Déconnexion sécurisée">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                        </button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}" class="bg-marian-blue text-white btn-premium shadow-blue-900/20">
+                        Connexion Agent
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Contenu Principal -->
+    <main class="flex-1 flex flex-col">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Messages Flash Toast (Vanilla JS) -->
+    {% if messages %}
+    <div id="toast-container" class="fixed bottom-8 right-8 z-[100] flex flex-col gap-3">
+        {% for message in messages %}
+        <div class="toast-item translate-x-[150%] transition-all duration-500 bg-white border-l-4 {% if message.tags == 'success' %}border-emerald-500{% else %}border-red-500{% endif %} p-4 rounded-2xl shadow-2xl flex items-center gap-4 min-w-[300px]">
+            <div class="{% if message.tags == 'success' %}text-emerald-500 bg-emerald-50{% else %}text-red-500 bg-red-50{% endif %} w-10 h-10 rounded-xl flex items-center justify-center">
+                {% if message.tags == 'success' %}
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                {% else %}
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                {% endif %}
+            </div>
+            <div>
+                <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Système</p>
+                <p class="text-sm font-bold text-slate-800">{{ message }}</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toasts = document.querySelectorAll('.toast-item');
+            toasts.forEach((toast, index) => {
+                setTimeout(() => {
+                    toast.classList.remove('translate-x-[150%]');
+                }, 100 * index);
+                setTimeout(() => {
+                    toast.classList.add('translate-x-[150%]');
+                    setTimeout(() => toast.remove(), 500);
+                }, 5000 + (100 * index));
+            });
+        });
+    </script>
+    {% endif %}
+
+</body>
+</html>
