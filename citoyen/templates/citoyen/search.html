@@ -237,10 +237,17 @@
             </div>
 
             {% if cin.statut == 'VALIDE' %}
-            <a href="{% url 'citoyen:download_pdf' cin.pk %}" class="w-full h-16 bg-marian-blue text-white flex items-center justify-center gap-4 rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl shadow-blue-900/20 active:scale-95 group">
-                <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                Télécharger mon Document Officiel
-            </a>
+                {% if user.is_authenticated %}
+                <a href="{% url 'citoyen:download_pdf' cin.pk %}" class="w-full h-16 bg-marian-blue text-white flex items-center justify-center gap-4 rounded-2xl font-black text-sm uppercase tracking-[0.2em] hover:bg-black transition-all shadow-xl shadow-blue-900/20 active:scale-95 group">
+                    <svg class="w-5 h-5 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+                    Télécharger le Document Officiel (Impression)
+                </a>
+                {% else %}
+                <a href="{% url 'login' %}?next={% url 'citoyen:download_pdf' cin.pk %}" class="w-full h-16 bg-amber-600 hover:bg-amber-700 text-white flex items-center justify-center gap-4 rounded-2xl font-black text-sm uppercase tracking-[0.2em] transition-all shadow-xl shadow-amber-900/20 active:scale-95 group">
+                    <svg class="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8-8v4h8z"/></svg>
+                    Connexion Requise pour Télécharger / Imprimer
+                </a>
+                {% endif %}
             {% else %}
             <button disabled class="w-full h-16 bg-slate-100 text-slate-400 flex items-center justify-center gap-4 rounded-2xl font-black text-sm uppercase tracking-[0.2em] cursor-not-allowed">
                 Document indisponible au téléchargement
@@ -248,23 +255,6 @@
             {% endif %}
         </div>
         {% endif %}
-
-        <!-- Encart Professionnel des Termes de Référence (TDR) -->
-        <div class="mt-12 p-6 bg-white border border-slate-150 rounded-[1.8rem] shadow-xl shadow-blue-950/5 flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div class="flex items-center gap-5">
-                <div class="w-12 h-12 bg-blue-50 text-marian-blue rounded-2xl flex items-center justify-center shrink-0 shadow-inner">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
-                </div>
-                <div class="text-center sm:text-left">
-                    <h4 class="text-xs font-black text-marian-blue uppercase tracking-widest mb-1">Termes de Référence (TDR)</h4>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Cadrage Stratégique &amp; Spécifications de l'Infrastructure</p>
-                </div>
-            </div>
-            <a href="{% url 'citoyen:tdr_pdf' %}" class="w-full sm:w-auto px-6 h-12 bg-gradient-to-r from-marian-blue to-blue-900 text-white rounded-xl font-black text-[10px] uppercase tracking-widest flex items-center justify-center gap-2 hover:bg-black transition-all active:scale-95 shadow-lg shadow-blue-900/15">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
-                Télécharger TDR (PDF)
-            </a>
-        </div>
     </div>
 
 

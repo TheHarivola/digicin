@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
 from core.models import CIN
 import os
 from xhtml2pdf import pisa
@@ -532,6 +533,7 @@ def download_tdr_pdf_view(request):
     return response
 
 
+@login_required
 def download_cin_pdf_view(request, pk):
     """
     Permet au citoyen de télécharger son document de CIN officiel sous format PDF
